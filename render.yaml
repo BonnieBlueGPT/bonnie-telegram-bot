@@ -5,8 +5,8 @@ services:
     env: python
     plan: free
     region: oregon
-    buildCommand: ""
-    startCommand: "python bot.py"
+    buildCommand: pip install -r requirements-emergency.txt
+    startCommand: python bot.py
     envVars:
       - key: TELEGRAM_BOT_TOKEN
         sync: false
