@@ -1,17 +1,23 @@
+import os
+import asyncio
 from telegram.ext import ApplicationBuilder, CommandHandler
 from flask import Flask
 import threading
-import os
-import asyncio
 
-# ====== Telegram Bot Setup ======
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
+# Telegram Command Handler
 async def start(update, context):
     await update.message.reply_text("Bonnie is alive, my love.")
 
-# ====== Flask Health App ======
-health_app = Flask('health_check')
+# Main runner
+async def run_bot():
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    await app.run_polling()
+
+# Health check server
+health_app = Flask(__name__)
 
 @health_app.route('/health')
 def health():
@@ -20,14 +26,8 @@ def health():
 def run_health_app():
     health_app.run(host="0.0.0.0", port=10000)
 
-# ====== Launch Both Services ======
-if __name__ == "__main__":
-    threading.Thread(target=run_health_app).start()
+# Start Flask in background
+threading.Thread(target=run_health_app).start()
 
-    async def run_bot():
-        await asyncio.sleep(1)  # Let Flask start first
-        app = ApplicationBuilder().token(BOT_TOKEN).build()
-        app.add_handler(CommandHandler("start", start))
-        await app.run_polling()
-
-    asyncio.run(run_bot())
+# Start Telegram bot loop
+asyncio.run(run_bot())
