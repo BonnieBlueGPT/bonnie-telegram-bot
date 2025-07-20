@@ -1,0 +1,22 @@
+# render.yaml — Auto-deployment for Bonnie Telegram Bot
+services:
+  - type: web
+    name: bonnie-telegram-bot
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: ""
+    startCommand: "python bot.py"
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: TELEGRAM_API_ID
+        sync: false
+      - key: TELEGRAM_API_HASH
+        sync: false
